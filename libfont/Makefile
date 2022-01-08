@@ -10,21 +10,19 @@ endif
 
 include	$(PSL1GHT)/ppu_rules
 
-
-
 #---------------------------------------------------------------------------------
 ifeq ($(strip $(PLATFORM)),)
 #---------------------------------------------------------------------------------
 export BASEDIR		:= $(CURDIR)
 export DEPS			:= $(BASEDIR)/deps
-export LIBS			:=	$(BASEDIR)/lib
+export LIBS			:= $(BASEDIR)/lib
 
 #---------------------------------------------------------------------------------
 else
 #---------------------------------------------------------------------------------
 
 export LIBDIR		:= $(LIBS)/$(PLATFORM)
-export DEPSDIR		:=	$(DEPS)/$(PLATFORM)
+export DEPSDIR		:= $(DEPS)/$(PLATFORM)
 
 #---------------------------------------------------------------------------------
 endif
@@ -79,8 +77,9 @@ $(BUILD):
 
 shader:
 	@echo "[VPCOMP] $(notdir $<)"
-	@vpcomp shader/vshader_text_normal.vcg shader/vshader_text_normal.rvp
-	@raw2h.exe  shader/vshader_text_normal.rvp source/vshader_text_normal.vcg.h source/vshader_text_normal.vcg.S vshader_text_normal_bin
+	@$(VPCOMP) shader/vshader_text_normal.vcg shader/vshader_text_normal.rvp
+	@$(RAW2H)  shader/vshader_text_normal.rvp source/vshader_text_normal.vcg.h source/vshader_text_normal.vcg.S vshader_text_normal_bin
+
 install: $(BUILD)
 	@echo Copying...
 	@cp include/*.h $(PORTLIBS)/include

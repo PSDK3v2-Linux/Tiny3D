@@ -10,8 +10,6 @@ endif
 
 include	$(PSL1GHT)/ppu_rules
 
-
-
 #---------------------------------------------------------------------------------
 ifeq ($(strip $(PLATFORM)),)
 #---------------------------------------------------------------------------------
@@ -38,7 +36,7 @@ DATA		:=	data
 LIBS		:=	
 
 MACHDEP		:= -DBIGENDIAN 
-CFLAGS		+= -O2 -Wall -mcpu=cell $(MACHDEP) -fno-strict-aliasing $(INCLUDES)
+CFLAGS		+= -O2 -Wall -mcpu=cell -fgnu89-inline $(MACHDEP) -fno-strict-aliasing $(INCLUDES)
 LD			:=	ppu-ld
 
 ifneq ($(BUILD),$(notdir $(CURDIR)))
@@ -78,9 +76,10 @@ $(BUILD):
 	@make --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile
 
 shader:
-	@echo "[VPCOMP] $(notdir $<)"
-	@vpcomp shader/vshader_text_normal.vcg shader/vshader_text_normal.rvp
-	@raw2h.exe  shader/vshader_text_normal.rvp source/vshader_text_normal.vcg.h source/vshader_text_normal.vcg.S vshader_text_normal_bin
+	@echo "[CGCOMP] $(notdir $<)"
+	@$(CGCOMP) shader/vshader_text_normal.vcg shader/vshader_text_normal.rvp
+	@$(RAW2H)  shader/vshader_text_normal.rvp source/vshader_text_normal.vcg.h source/vshader_text_normal.vcg.S vshader_text_normal_bin
+
 install: $(BUILD)
 	@echo Copying...
 	@cp include/*.h $(PORTLIBS)/include
@@ -89,7 +88,7 @@ install: $(BUILD)
 
 clean:
 	@echo Clean...
-	@rm -rf $(BUILD) $(OUTPUT).elf $(OUTPUT).self $(OUTPUT).a
+	@rm -rf $(BUILD) $(OUTPUT).elf $(OUTPUT).self $(OUTPUT).fake.self $(OUTPUT).a
 
 else
 
